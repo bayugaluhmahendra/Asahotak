@@ -1,73 +1,336 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Brain Challenge</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>🧠 Brain Challenge V4</title>
+
 <link rel="stylesheet" href="style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
-<body>
+
+<body class="dark">
+
+<!-- Splash -->
+
+<div id="splash">
+
+<div class="logo">🧠</div>
+
+<h1>Brain Challenge</h1>
+
+<p>Loading...</p>
+
+</div>
+
+<!-- Audio -->
 
 <audio id="bgm" loop>
-    <source src="bg.mp3" type="audio/mpeg">
+<source src="bg.mp3" type="audio/mpeg">
 </audio>
+
+<audio id="correct">
+<source src="correct.mp3">
+</audio>
+
+<audio id="wrong">
+<source src="wrong.mp3">
+</audio>
+
+<audio id="gameover">
+<source src="gameover.mp3">
+</audio>
+
+<!-- Profile -->
+
+<div id="profileModal" class="modal">
+
+<div class="modalBox">
+
+<h2>👤 Profil Pemain</h2>
+
+<input
+type="text"
+id="playerName"
+placeholder="Masukkan Nama">
+
+<button id="saveProfile">
+
+Mulai Bermain
+
+</button>
+
+</div>
+
+</div>
+
+<!-- Settings -->
+
+<div id="settings" class="modal">
+
+<div class="modalBox">
+
+<h2>⚙ Settings</h2>
+
+<button id="themeDark">
+🌙 Dark
+</button>
+
+<button id="themeLight">
+☀ Light
+</button>
+
+<button id="themePurple">
+💜 Neon
+</button>
+
+<button id="themeOcean">
+💙 Ocean
+</button>
+
+<hr>
+
+<button id="musicBtn">
+🎵 Music
+</button>
+
+<button id="resetBoard">
+🗑 Reset Leaderboard
+</button>
+
+<button id="resetStats">
+📊 Reset Statistik
+</button>
+
+<button id="closeSetting">
+
+Tutup
+
+</button>
+
+</div>
+
+</div>
 
 <div class="container">
 
-<h1>🧠 Brain Challenge</h1>
+<header>
 
-<div class="top">
+<div>
 
-<div class="box">
-❤️ Nyawa
-<h2 id="life">4</h2>
-</div>
+<h1>
 
-<div class="box">
-⭐ Combo
-<h2 id="combo">0</h2>
-</div>
+🧠 Brain Challenge
 
-<div class="box">
-⏳ Timer
-<h2 id="timer">25</h2>
-</div>
+</h1>
+
+<p id="playerInfo">
+
+Player
+
+</p>
 
 </div>
 
-<div id="game">
+<button id="openSetting">
 
-<h2 id="question">Tekan Start</h2>
+⚙
 
-<div id="answers"></div>
+</button>
 
-<button id="startBtn">START GAME</button>
+</header>
 
-</div>
+<section class="status">
 
-<div id="result" class="hide">
+<div class="card">
 
-<h2>Game Selesai</h2>
+❤️
 
-<h1 id="scoreText"></h1>
+<h2 id="life">
 
-<input id="playerName" placeholder="Nama">
+4
 
-<button id="saveBtn">Simpan Score</button>
-
-<button id="waBtn">Share WhatsApp</button>
-
-<button id="igBtn">Copy Caption Instagram</button>
+</h2>
 
 </div>
 
-<h2>🏆 Leaderboard</h2>
+<div class="card">
 
-<ol id="leaderboard"></ol>
+⭐
+
+<h2 id="combo">
+
+0
+
+</h2>
 
 </div>
+
+<div class="card">
+
+🏆
+
+<h2 id="score">
+
+0
+
+</h2>
+
+</div>
+
+</section>
+
+<div class="timer">
+
+<div id="timerFill"></div>
+
+<span id="timerText">
+
+25
+
+</span>
+
+</div>
+
+<div class="progress">
+
+Soal
+
+<span id="questionNow">
+
+1
+
+</span>
+
+/10
+
+</div>
+
+<section id="game">
+
+<h2 id="question">
+
+Tekan MULAI
+
+</h2>
+
+<div id="answers">
+
+</div>
+
+<button id="startGame">
+
+▶ MULAI GAME
+
+</button>
+
+</section>
+
+<section id="gameOver">
+
+<h1>
+
+🎉 Game Selesai
+
+</h1>
+
+<h2 id="finalScore">
+
+0
+
+</h2>
+
+<h3 id="rank">
+
+Beginner
+
+</h3>
+
+<button id="saveScore">
+
+💾 Simpan Score
+
+</button>
+
+<button id="shareWA">
+
+📲 WhatsApp
+
+</button>
+
+<button id="shareIG">
+
+📸 Instagram
+
+</button>
+
+<button id="playAgain">
+
+🔄 Main Lagi
+
+</button>
+
+</section>
+
+<section class="leaderboard">
+
+<h2>
+
+🏆 TOP 10
+
+</h2>
+
+<ol id="leaderboardList">
+
+</ol>
+
+</section>
+
+<section class="stats">
+
+<h2>
+
+📈 Statistik
+
+</h2>
+
+<div class="grid">
+
+<div>Total Main <span id="totalPlay">0</span></div>
+
+<div>Benar <span id="correctCount">0</span></div>
+
+<div>Salah <span id="wrongCount">0</span></div>
+
+<div>Akurasi <span id="accuracy">0%</span></div>
+
+<div>Combo Tertinggi <span id="bestCombo">0</span></div>
+
+<div>High Score <span id="highScore">0</span></div>
+
+</div>
+
+</section>
+
+<footer>
+
+Brain Challenge V4
+
+</footer>
+
+</div>
+
+<canvas id="confetti"></canvas>
 
 <script src="script.js"></script>
 
 </body>
+
 </html>
+```

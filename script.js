@@ -1,190 +1,120 @@
-// ==========================
-// BRAIN CHALLENGE V2
-// ==========================
+const questions=[
 
-const login = document.getElementById("login");
-const quiz = document.getElementById("quiz");
-const result = document.getElementById("result");
-
-const username = document.getElementById("username");
-const playBtn = document.getElementById("playBtn");
-
-const playerName = document.getElementById("playerName");
-const question = document.getElementById("question");
-const answers = document.querySelectorAll(".answer");
-
-const scoreText = document.getElementById("score");
-const comboText = document.getElementById("combo");
-const timerText = document.getElementById("timer");
-
-const progress = document.getElementById("progress");
-
-const number = document.getElementById("number");
-
-let current = 0;
-let score = 0;
-let combo = 0;
-let life = 3;
-let timer = 15;
-let interval;
-
-let player = "";
-
-let quizList = [];
-
-const questions = [
-
-{
-question:"Planet yang memiliki satelit alami terbanyak adalah...",
-answers:["Saturnus","Jupiter","Neptunus","Uranus"],
-correct:0
-},
-
-{
-question:"Penemu World Wide Web adalah...",
-answers:["Bill Gates","Steve Jobs","Tim Berners-Lee","Larry Page"],
-correct:2
-},
-
-{
-question:"Bilangan prima setelah 97 adalah...",
-answers:["99","100","101","103"],
-correct:2
-},
-
-{
-question:"Negara dengan pulau terbanyak di dunia adalah...",
-answers:["Indonesia","Filipina","Swedia","Jepang"],
-correct:2
-},
-
-{
-question:"Gunung tertinggi di Tata Surya adalah...",
-answers:["Everest","Olympus Mons","K2","Fuji"],
-correct:1
-},
-
-{
-question:"Bahasa Java pertama dikembangkan oleh...",
-answers:["Google","Microsoft","Sun Microsystems","IBM"],
-correct:2
-},
-
-{
-question:"Ibukota Kanada adalah...",
-answers:["Toronto","Ottawa","Vancouver","Montreal"],
-correct:1
-},
-
-{
-question:"Unsur kimia dengan simbol Au adalah...",
-answers:["Perak","Aluminium","Emas","Argon"],
-correct:2
-},
-
-{
-question:"Planet terbesar di Tata Surya adalah...",
-answers:["Bumi","Mars","Saturnus","Jupiter"],
-correct:3
-},
-
-{
-question:"Organ terbesar pada tubuh manusia adalah...",
-answers:["Hati","Kulit","Paru-paru","Jantung"],
-correct:1
-}
-
+{q:"2+2=?",a:["3","4","5","6"],c:1},
+{q:"Ibukota Jepang?",a:["Tokyo","Osaka","Kyoto","Nagoya"],c:0},
+{q:"5x6=?",a:["30","20","25","35"],c:0},
+{q:"Planet Merah?",a:["Mars","Venus","Saturnus","Jupiter"],c:0},
+{q:"8+9=?",a:["17","18","19","20"],c:0},
+{q:"10-3=?",a:["6","7","8","9"],c:1},
+{q:"Huruf pertama alfabet?",a:["B","A","C","D"],c:1},
+{q:"100/10=?",a:["20","15","10","5"],c:2},
+{q:"Air membeku pada?",a:["0°C","50°C","10°C","5°C"],c:0},
+{q:"1 Jam=?",a:["60 menit","30 menit","90 menit","100 menit"],c:0},
+{q:"9x9=?",a:["72","81","99","90"],c:1},
+{q:"Benua Indonesia?",a:["Asia","Afrika","Eropa","Australia"],c:0},
 ];
 
-playBtn.onclick = ()=>{
+let list=[];
+let index=0;
+let life=4;
+let combo=0;
+let score=0;
+let timer=25;
+let interval;
 
-player = username.value.trim();
+const lifeTxt=document.getElementById("life");
+const comboTxt=document.getElementById("combo");
+const timerTxt=document.getElementById("timer");
+const question=document.getElementById("question");
+const answers=document.getElementById("answers");
 
-if(player==""){
+function shuffle(array){
+return array.sort(()=>Math.random()-0.5);
+}
 
-alert("Masukkan nama dulu!");
+document.getElementById("startBtn").onclick=()=>{
+
+document.getElementById("bgm").play();
+
+list=shuffle([...questions]).slice(0,10);
+
+index=0;
+life=4;
+combo=0;
+score=0;
+
+document.getElementById("startBtn").style.display="none";
+
+showQuestion();
+
+}
+
+function showQuestion(){
+
+if(index>=10||life<=0){
+
+gameOver();
 
 return;
 
 }
 
-playerName.innerHTML = player;
+lifeTxt.innerHTML=life;
+comboTxt.innerHTML=combo;
 
-login.classList.add("hidden");
+timer=25;
 
-quiz.classList.remove("hidden");
-
-quizList = [...questions]
-.sort(()=>Math.random()-0.5);
-
-loadQuestion();
-function loadQuestion(){
+timerTxt.innerHTML=timer;
 
 clearInterval(interval);
-
-timer=15;
-
-timerText.innerHTML=timer;
 
 interval=setInterval(()=>{
 
 timer--;
 
-timerText.innerHTML=timer;
+timerTxt.innerHTML=timer;
 
 if(timer<=0){
 
-clearInterval(interval);
-
 life--;
 
-updateLife();
+combo=0;
 
-nextQuestion();
+next();
 
 }
 
 },1000);
 
-progress.style.width=((current)/10)*100+"%";
+let q=list[index];
 
-number.innerHTML=(current+1)+" / 10";
+question.innerHTML=(index+1)+". "+q.q;
 
-const q=quizList[current];
+answers.innerHTML="";
 
-question.innerHTML=q.question;
+q.a.forEach((txt,i)=>{
 
-answers.forEach((btn,index)=>{
+let b=document.createElement("button");
 
-btn.className="answer";
+b.innerHTML=txt;
 
-btn.innerHTML=q.answers[index];
+b.onclick=()=>check(i);
 
-btn.onclick=()=>checkAnswer(index);
+answers.appendChild(b);
 
 });
 
 }
 
-function checkAnswer(index){
+function check(i){
 
 clearInterval(interval);
 
-const q=quizList[current];
-
-answers.forEach(btn=>btn.disabled=true);
-
-if(index===q.correct){
-
-score+=10+(combo*2);
+if(i==list[index].c){
 
 combo++;
 
-scoreText.innerHTML=score;
-
-comboText.innerHTML=combo;
-
-answers[index].classList.add("correct");
+score+=10+(combo*2);
 
 }else{
 
@@ -192,169 +122,50 @@ life--;
 
 combo=0;
 
-comboText.innerHTML=0;
+}
 
-updateLife();
-
-answers[index].classList.add("wrong");
-
-answers[q.correct].classList.add("correct");
+next();
 
 }
 
-setTimeout(()=>{
+function next(){
 
-nextQuestion();
+index++;
 
-},1200);
-
-}
-
-function nextQuestion(){
-
-current++;
-
-if(life<=0){
-
-finishGame();
-
-return;
+showQuestion();
 
 }
 
-if(current>=10){
-
-finishGame();
-
-return;
-
-}
-
-loadQuestion();
-
-}
-
-function updateLife(){
-
-const lifeBox=document.querySelector(".life");
-
-let html="";
-
-for(let i=0;i<life;i++){
-
-html+="❤️ ";
-
-}
-
-for(let i=life;i<3;i++){
-
-html+="🤍 ";
-
-}
-
-lifeBox.innerHTML=html;
-
-}
-}
-function finishGame(){
+function gameOver(){
 
 clearInterval(interval);
 
-quiz.classList.add("hidden");
+document.getElementById("game").classList.add("hide");
 
-result.classList.remove("hidden");
+document.getElementById("result").classList.remove("hide");
 
-document.getElementById("finalName").innerHTML=player;
+let rank="🥉 Beginner";
 
-document.getElementById("finalScore").innerHTML=score;
+if(score>=80) rank="🥇 Master";
+else if(score>=60) rank="🥈 Pro";
+else if(score>=40) rank="🏅 Advanced";
 
-// Hitung Akurasi
-const accuracy=Math.round((score/(10*10))*100);
-
-document.getElementById("accuracy").innerHTML=
-"🎯 Akurasi : "+accuracy+"%";
-
-// Rank
-let rank="🤣 Noob";
-
-if(score>=100){
-
-rank="👑 LEGEND";
-
-}else if(score>=90){
-
-rank="🏆 MASTER";
-
-}else if(score>=80){
-
-rank="🥇 ELITE";
-
-}else if(score>=70){
-
-rank="🥈 PRO";
-
-}else if(score>=60){
-
-rank="🥉 PINTAR";
-
-}else if(score>=50){
-
-rank="👍 LUMAYAN";
-
-}else if(score>=40){
-
-rank="😅 BELAJAR LAGI";
+document.getElementById("scoreText").innerHTML=
+`Score : ${score}<br>${rank}`;
 
 }
 
-document.getElementById("rank").innerHTML=rank;
+function loadBoard(){
 
-// Leaderboard
-saveLeaderboard();
-
-showLeaderboard();
-
-}
-
-function saveLeaderboard(){
-
-let board=JSON.parse(localStorage.getItem("brainLeaderboard"))||[];
-
-board.push({
-
-name:player,
-
-score:score
-
-});
+let board=JSON.parse(localStorage.getItem("brain"))||[];
 
 board.sort((a,b)=>b.score-a.score);
 
-board=board.slice(0,10);
+let html="";
 
-localStorage.setItem("brainLeaderboard",JSON.stringify(board));
+board.forEach(v=>{
 
-}
-
-function showLeaderboard(){
-
-let board=JSON.parse(localStorage.getItem("brainLeaderboard"))||[];
-
-let html="<h3>🏆 TOP 10</h3>";
-
-board.forEach((item,index)=>{
-
-html+=`
-
-<div>
-
-<span>${index+1}. ${item.name}</span>
-
-<b>${item.score}</b>
-
-</div>
-
-`;
+html+=`<li>${v.name} - ${v.score}</li>`;
 
 });
 
@@ -362,25 +173,42 @@ document.getElementById("leaderboard").innerHTML=html;
 
 }
 
-// Tampilkan leaderboard saat tombol diklik
-document.getElementById("leaderBtn").onclick=()=>{
+loadBoard();
 
-let board=JSON.parse(localStorage.getItem("brainLeaderboard"))||[];
+document.getElementById("saveBtn").onclick=()=>{
 
-let text="🏆 TOP 10\n\n";
+let board=JSON.parse(localStorage.getItem("brain"))||[];
 
-board.forEach((item,index)=>{
+board.push({
 
-text+=`${index+1}. ${item.name} - ${item.score}\n`;
+name:document.getElementById("playerName").value||"Player",
+
+score:score
 
 });
 
-if(board.length===0){
+localStorage.setItem("brain",JSON.stringify(board));
 
-text="Belum ada skor tersimpan.";
+loadBoard();
+
+alert("Score tersimpan!");
+
+}
+
+document.getElementById("waBtn").onclick=()=>{
+
+let text=`Aku mendapatkan score ${score} di Brain Challenge! Bisa mengalahkanku?`;
+
+window.open("https://wa.me/?text="+encodeURIComponent(text));
 
 }
 
-alert(text);
+document.getElementById("igBtn").onclick=()=>{
 
-}
+let text=`🧠 Brain Challenge\n\nScoreku : ${score}\nAyo lawan aku!`;
+
+navigator.clipboard.writeText(text);
+
+alert("Caption berhasil disalin. Tempel di Instagram.");
+
+  }

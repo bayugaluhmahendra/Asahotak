@@ -1,336 +1,259 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>🧠 Brain Challenge V4</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brain Challenge Ultimate</title>
 
 <link rel="stylesheet" href="style.css">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body class="dark">
+<body>
 
-<!-- Splash -->
-
-<div id="splash">
-
-<div class="logo">🧠</div>
-
-<h1>Brain Challenge</h1>
-
-<p>Loading...</p>
-
+<!-- Loading -->
+<div id="loading">
+    <h1>🧠 Brain Challenge</h1>
+    <p>Loading...</p>
 </div>
 
-<!-- Audio -->
+<!-- MENU -->
+<div id="menu">
 
-<audio id="bgm" loop>
-<source src="bg.mp3" type="audio/mpeg">
-</audio>
+<h1>🧠 Brain Challenge Ultimate</h1>
 
-<audio id="correct">
-<source src="correct.mp3">
-</audio>
+<div class="playerBox">
+Player ID :
+<span id="playerID">BC-000000</span>
+</div>
 
-<audio id="wrong">
-<source src="wrong.mp3">
-</audio>
+<button id="playBtn">
+▶ Mulai Bermain
+</button>
 
-<audio id="gameover">
-<source src="gameover.mp3">
-</audio>
+<button id="statsBtn">
+📊 Statistik
+</button>
 
-<!-- Profile -->
+<button id="achievementBtn">
+🏆 Achievement
+</button>
 
-<div id="profileModal" class="modal">
-
-<div class="modalBox">
-
-<h2>👤 Profil Pemain</h2>
-
-<input
-type="text"
-id="playerName"
-placeholder="Masukkan Nama">
-
-<button id="saveProfile">
-
-Mulai Bermain
-
+<button id="settingBtn">
+⚙ Pengaturan
 </button>
 
 </div>
 
-</div>
+<!-- GAME -->
+<div id="game" class="hidden">
 
-<!-- Settings -->
+<!-- HUD -->
+<div id="hud">
 
-<div id="settings" class="modal">
-
-<div class="modalBox">
-
-<h2>⚙ Settings</h2>
-
-<button id="themeDark">
-🌙 Dark
-</button>
-
-<button id="themeLight">
-☀ Light
-</button>
-
-<button id="themePurple">
-💜 Neon
-</button>
-
-<button id="themeOcean">
-💙 Ocean
-</button>
-
-<hr>
-
-<button id="musicBtn">
-🎵 Music
-</button>
-
-<button id="resetBoard">
-🗑 Reset Leaderboard
-</button>
-
-<button id="resetStats">
-📊 Reset Statistik
-</button>
-
-<button id="closeSetting">
-
-Tutup
-
-</button>
-
-</div>
-
-</div>
-
-<div class="container">
-
-<header>
-
-<div>
-
-<h1>
-
-🧠 Brain Challenge
-
-</h1>
-
-<p id="playerInfo">
-
-Player
-
-</p>
-
-</div>
-
-<button id="openSetting">
-
-⚙
-
-</button>
-
-</header>
-
-<section class="status">
-
-<div class="card">
-
+<div class="box">
 ❤️
-
-<h2 id="life">
-
+<span id="life">
 4
-
-</h2>
-
+</span>
 </div>
 
-<div class="card">
-
-⭐
-
-<h2 id="combo">
-
-0
-
-</h2>
-
-</div>
-
-<div class="card">
-
-🏆
-
-<h2 id="score">
-
-0
-
-</h2>
-
-</div>
-
-</section>
-
-<div class="timer">
-
-<div id="timerFill"></div>
-
-<span id="timerText">
-
+<div class="box">
+⏳
+<span id="timer">
 25
-
 </span>
+</div>
+
+<div class="box">
+⭐
+<span id="combo">
+0
+</span>
+</div>
+
+<div class="box">
+🏆
+<span id="score">
+0
+</span>
+</div>
 
 </div>
 
-<div class="progress">
+<!-- Progress -->
+<div id="progress">
 
-Soal
-
-<span id="questionNow">
-
-1
-
-</span>
-
-/10
+<div id="progressBar">
 
 </div>
 
-<section id="game">
+</div>
+
+<!-- Question -->
+
+<div id="questionBox">
 
 <h2 id="question">
-
-Tekan MULAI
-
+Pertanyaan...
 </h2>
 
 <div id="answers">
 
+<button class="answer"></button>
+
+<button class="answer"></button>
+
+<button class="answer"></button>
+
+<button class="answer"></button>
+
 </div>
 
-<button id="startGame">
+</div>
 
-▶ MULAI GAME
+</div>
 
-</button>
+<!-- RESULT -->
 
-</section>
+<div id="result" class="hidden">
 
-<section id="gameOver">
+<h1>🎉 Permainan Selesai</h1>
 
-<h1>
-
-🎉 Game Selesai
-
-</h1>
-
-<h2 id="finalScore">
-
+<h2>
+Score :
+<span id="finalScore">
 0
-
+</span>
 </h2>
 
-<h3 id="rank">
+<h2>
+Rank :
+<span id="rank">
+Bronze
+</span>
+</h2>
 
-Beginner
+<h2>
+Combo :
+<span id="bestCombo">
+0
+</span>
+</h2>
 
-</h3>
+<button id="playAgain">
 
-<button id="saveScore">
-
-💾 Simpan Score
+Main Lagi
 
 </button>
 
 <button id="shareWA">
 
-📲 WhatsApp
+Share WhatsApp
 
 </button>
-
-<button id="shareIG">
-
-📸 Instagram
-
-</button>
-
-<button id="playAgain">
-
-🔄 Main Lagi
-
-</button>
-
-</section>
-
-<section class="leaderboard">
-
-<h2>
-
-🏆 TOP 10
-
-</h2>
-
-<ol id="leaderboardList">
-
-</ol>
-
-</section>
-
-<section class="stats">
-
-<h2>
-
-📈 Statistik
-
-</h2>
-
-<div class="grid">
-
-<div>Total Main <span id="totalPlay">0</span></div>
-
-<div>Benar <span id="correctCount">0</span></div>
-
-<div>Salah <span id="wrongCount">0</span></div>
-
-<div>Akurasi <span id="accuracy">0%</span></div>
-
-<div>Combo Tertinggi <span id="bestCombo">0</span></div>
-
-<div>High Score <span id="highScore">0</span></div>
 
 </div>
 
-</section>
+<!-- STATISTIK -->
 
-<footer>
+<div id="stats" class="hidden">
 
-Brain Challenge V4
+<h2>📊 Statistik</h2>
 
-</footer>
+<p>Total Main :
+<span id="totalGame">
+0
+</span>
+</p>
+
+<p>High Score :
+<span id="highScore">
+0
+</span>
+</p>
+
+<p>Total Benar :
+<span id="correct">
+0
+</span>
+</p>
+
+<p>Total Salah :
+<span id="wrong">
+0
+</span>
+</p>
+
+<button class="back">
+Kembali
+</button>
 
 </div>
 
+<!-- Achievement -->
+
+<div id="achievement" class="hidden">
+
+<h2>
+🏆 Achievement
+</h2>
+
+<div id="achievementList">
+
+Belum ada Achievement
+
+</div>
+
+<button class="back">
+
+Kembali
+
+</button>
+
+</div>
+
+<!-- Settings -->
+
+<div id="settings" class="hidden">
+
+<h2>
+⚙ Pengaturan
+</h2>
+
+<select id="theme">
+
+<option value="dark">
+Dark
+</option>
+
+<option value="light">
+Light
+</option>
+
+<option value="neon">
+Neon
+</option>
+
+<option value="ocean">
+Ocean
+</option>
+
+</select>
+
+<button class="back">
+
+Kembali
+
+</button>
+
+</div>
+
+<!-- Confetti -->
 <canvas id="confetti"></canvas>
 
 <script src="script.js"></script>
 
 </body>
-
 </html>
-```

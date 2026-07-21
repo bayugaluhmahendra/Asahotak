@@ -1,6 +1,6 @@
 // --- KONFIGURASI SUPABASE (Ganti dengan URL & Anon Key project Supabase Anda) ---
 const SUPABASE_URL = 'https://kcpmxxvqeyehdskyzinr.supabase.co/rest/v1/';
-const SUPABASE_ANON_KEY = 'sb_secret__HxfWm09rAcza4rleKysTw_E62XCqzf';
+const SUPABASE_ANON_KEY = 'sb_publishable_r2dRtZhf0oCcea3aeuj4Xg_lW2QFjlO';
 
 let supabaseClient = null;
 try {

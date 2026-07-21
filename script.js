@@ -5,7 +5,8 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 let supabaseClient = null;
 try {
     if (SUPABASE_URL !== 'https://kcpmxxvqeyehdskyzinr.supabase.co/rest/v1/leaderboard') {
-        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        supabaseClient = supabase.createClient(https://kcpmxxvqeyehdskyzinr.supabase.co/rest/v1/leaderboard,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtjcG14eHZxZXllaGRza3l6aW5yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2NTY2NzEsImV4cCI6MjEwMDIzMjY3MX0.nL_3AoClHoRwaSXPba3Ycok2lvUTKUOUo2XGq0YXCWE';
+ );
     }
 } catch (e) {
     console.warn("Supabase belum dikonfigurasi, menggunakan mode lokal.");

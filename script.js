@@ -4,7 +4,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 let supabaseClient = null;
 try {
-    if (SUPABASE_URL !== 'ISI_SUPABASE_URL_ANDA_DISINI') {
+    if (SUPABASE_URL !== 'https://kcpmxxvqeyehdskyzinr.supabase.co/rest/v1/leaderboard') {
         supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     }
 } catch (e) {

@@ -1,68 +1,109 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Brain Challenge</title>
+<title>Brain Challenge V2</title>
 
 <link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 </head>
 
 <body>
 
-<div class="background"></div>
+<div class="bg"></div>
 
 <!-- LOGIN -->
-<div id="login" class="card">
+
+<section id="login" class="card">
 
 <h1>🧠 Brain Challenge</h1>
 
 <p>Masukkan nama kamu</p>
 
-<input
-type="text"
-id="playerName"
-placeholder="Nama..."
-maxlength="20">
+<input id="username" type="text" placeholder="Nama kamu">
 
-<button id="startBtn">
+<button id="playBtn">
 
-Mulai Game
+🎮 Mulai Game
 
 </button>
 
-</div>
+<button id="leaderBtn">
+
+🏆 Leaderboard
+
+</button>
+
+</section>
 
 <!-- QUIZ -->
 
-<div id="quiz" class="hidden">
+<section id="quiz" class="hidden">
 
-<div class="top">
+<header>
 
-<div class="player">
+<div>
 
-👤 <span id="name"></span>
+👤
+
+<span id="playerName">
+
+Player
+
+</span>
 
 </div>
 
-<div class="score">
+<div>
 
-⭐ <span id="score">0</span>
+⭐
+
+<span id="score">
+
+0
+
+</span>
 
 </div>
+
+<div>
+
+🔥
+
+<span id="combo">
+
+0
+
+</span>
+
+</div>
+
+</header>
+
+<div class="life">
+
+❤️
+
+❤️
+
+❤️
 
 </div>
 
 <div class="progress">
 
-<div id="progressBar"></div>
+<div id="progress"></div>
 
 </div>
 
-<div class="timer">
+<div class="timerBox">
 
 ⏳
 
@@ -76,7 +117,7 @@ Mulai Game
 
 <h2 id="question">
 
-Pertanyaan
+Question
 
 </h2>
 
@@ -92,21 +133,29 @@ Pertanyaan
 
 </div>
 
-<div id="questionNumber">
+<div id="number">
 
 1 / 10
 
 </div>
 
-</div>
+</section>
 
 <!-- RESULT -->
 
-<div id="result" class="card hidden">
+<section id="result" class="card hidden">
 
-<h1>🏆 Hasil</h1>
+<h1>
 
-<h2 id="finalName"></h2>
+🏆 HASIL
+
+</h1>
+
+<h2 id="finalName">
+
+Player
+
+</h2>
 
 <h3>
 
@@ -126,15 +175,26 @@ Legend
 
 </h2>
 
+<div id="accuracy">
+
+Akurasi : 100%
+
+</div>
+
+<div id="leaderboard">
+
+</div>
+
 <button onclick="location.reload()">
 
-Main Lagi
+🔄 Main Lagi
 
 </button>
 
-</div>
+</section>
 
 <script src="script.js"></script>
 
 </body>
+
 </html>

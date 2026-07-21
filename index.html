@@ -1,200 +1,73 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Brain Challenge V2</title>
-
+<title>Brain Challenge</title>
 <link rel="stylesheet" href="style.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
 </head>
-
 <body>
 
-<div class="bg"></div>
+<audio id="bgm" loop>
+    <source src="bg.mp3" type="audio/mpeg">
+</audio>
 
-<!-- LOGIN -->
-
-<section id="login" class="card">
+<div class="container">
 
 <h1>🧠 Brain Challenge</h1>
 
-<p>Masukkan nama kamu</p>
+<div class="top">
 
-<input id="username" type="text" placeholder="Nama kamu">
+<div class="box">
+❤️ Nyawa
+<h2 id="life">4</h2>
+</div>
 
-<button id="playBtn">
+<div class="box">
+⭐ Combo
+<h2 id="combo">0</h2>
+</div>
 
-🎮 Mulai Game
-
-</button>
-
-<button id="leaderBtn">
-
-🏆 Leaderboard
-
-</button>
-
-</section>
-
-<!-- QUIZ -->
-
-<section id="quiz" class="hidden">
-
-<header>
-
-<div>
-
-👤
-
-<span id="playerName">
-
-Player
-
-</span>
+<div class="box">
+⏳ Timer
+<h2 id="timer">25</h2>
+</div>
 
 </div>
 
-<div>
+<div id="game">
 
-⭐
+<h2 id="question">Tekan Start</h2>
 
-<span id="score">
+<div id="answers"></div>
 
-0
-
-</span>
+<button id="startBtn">START GAME</button>
 
 </div>
 
-<div>
+<div id="result" class="hide">
 
-🔥
+<h2>Game Selesai</h2>
 
-<span id="combo">
+<h1 id="scoreText"></h1>
 
-0
+<input id="playerName" placeholder="Nama">
 
-</span>
+<button id="saveBtn">Simpan Score</button>
 
-</div>
+<button id="waBtn">Share WhatsApp</button>
 
-</header>
-
-<div class="life">
-
-❤️
-
-❤️
-
-❤️
+<button id="igBtn">Copy Caption Instagram</button>
 
 </div>
 
-<div class="progress">
+<h2>🏆 Leaderboard</h2>
 
-<div id="progress"></div>
-
-</div>
-
-<div class="timerBox">
-
-⏳
-
-<span id="timer">
-
-15
-
-</span>
+<ol id="leaderboard"></ol>
 
 </div>
-
-<h2 id="question">
-
-Question
-
-</h2>
-
-<div id="answers">
-
-<button class="answer"></button>
-
-<button class="answer"></button>
-
-<button class="answer"></button>
-
-<button class="answer"></button>
-
-</div>
-
-<div id="number">
-
-1 / 10
-
-</div>
-
-</section>
-
-<!-- RESULT -->
-
-<section id="result" class="card hidden">
-
-<h1>
-
-🏆 HASIL
-
-</h1>
-
-<h2 id="finalName">
-
-Player
-
-</h2>
-
-<h3>
-
-Nilai
-
-<span id="finalScore">
-
-0
-
-</span>
-
-</h3>
-
-<h2 id="rank">
-
-Legend
-
-</h2>
-
-<div id="accuracy">
-
-Akurasi : 100%
-
-</div>
-
-<div id="leaderboard">
-
-</div>
-
-<button onclick="location.reload()">
-
-🔄 Main Lagi
-
-</button>
-
-</section>
 
 <script src="script.js"></script>
 
 </body>
-
 </html>

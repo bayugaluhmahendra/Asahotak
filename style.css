@@ -1,458 +1,406 @@
-```css
-/* ===========================
-   Brain Challenge V4
-   style.css
-=========================== */
-
-:root{
-    --bg:#0f172a;
-    --card:rgba(255,255,255,.08);
-    --text:#ffffff;
-    --primary:#3b82f6;
-    --success:#22c55e;
-    --danger:#ef4444;
-    --warning:#f59e0b;
-    --radius:20px;
-    --shadow:0 10px 35px rgba(0,0,0,.35);
-    --glass:blur(18px);
-}
+/* ======================================
+   Brain Challenge Ultimate
+====================================== */
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
 }
 
 body{
-    min-height:100vh;
-    background:linear-gradient(135deg,#0f172a,#1e293b,#111827);
-    color:var(--text);
-    overflow-x:hidden;
-}
 
-.container{
-    width:min(95%,900px);
-    margin:auto;
-    padding:20px;
-}
+background:#10131d;
+color:#fff;
 
-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
-}
+display:flex;
 
-header h1{
-    font-size:32px;
-    font-weight:700;
-}
+justify-content:center;
 
-#playerInfo{
-    opacity:.8;
-    margin-top:5px;
-    font-size:14px;
-}
+align-items:center;
 
-button{
-    border:none;
-    cursor:pointer;
-    transition:.25s;
-}
+min-height:100vh;
 
-button:hover{
-    transform:translateY(-2px);
-}
-
-button:active{
-    transform:scale(.95);
-}
-
-#openSetting{
-    width:55px;
-    height:55px;
-    border-radius:50%;
-    background:var(--primary);
-    color:white;
-    font-size:22px;
-}
-
-.status{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:15px;
-    margin-bottom:20px;
-}
-
-.card{
-    background:var(--card);
-    backdrop-filter:var(--glass);
-    border:1px solid rgba(255,255,255,.1);
-    border-radius:var(--radius);
-    text-align:center;
-    padding:18px;
-    box-shadow:var(--shadow);
-}
-
-.card h2{
-    margin-top:8px;
-    font-size:28px;
-}
-
-.timer{
-    position:relative;
-    width:100%;
-    height:28px;
-    border-radius:30px;
-    overflow:hidden;
-    background:#1f2937;
-    margin-bottom:15px;
-}
-
-#timerFill{
-    width:100%;
-    height:100%;
-    background:linear-gradient(90deg,#22c55e,#84cc16);
-    transition:.2s linear;
-}
-
-#timerText{
-    position:absolute;
-    width:100%;
-    top:50%;
-    left:0;
-    transform:translateY(-50%);
-    text-align:center;
-    font-weight:bold;
-}
-
-.progress{
-    text-align:center;
-    margin-bottom:20px;
-    font-weight:600;
-}
-
-#game{
-    background:var(--card);
-    backdrop-filter:var(--glass);
-    border-radius:25px;
-    padding:25px;
-    box-shadow:var(--shadow);
-}
-
-#question{
-    text-align:center;
-    margin-bottom:25px;
-    line-height:1.5;
-}
-
-#answers{
-    display:grid;
-    gap:15px;
-}
-
-#answers button{
-    background:#2563eb;
-    color:white;
-    padding:16px;
-    border-radius:15px;
-    font-size:17px;
-}
-
-#answers button:hover{
-    background:#1d4ed8;
-}
-
-#startGame{
-    width:100%;
-    margin-top:25px;
-    padding:18px;
-    background:#22c55e;
-    color:white;
-    border-radius:18px;
-    font-size:18px;
-    font-weight:bold;
-}
-
-#gameOver{
-    display:none;
-    margin-top:25px;
-    text-align:center;
-    background:var(--card);
-    backdrop-filter:var(--glass);
-    border-radius:25px;
-    padding:25px;
-}
-
-#gameOver button{
-    width:100%;
-    margin-top:12px;
-    padding:15px;
-    border-radius:15px;
-    background:var(--primary);
-    color:white;
-}
-
-.leaderboard,
-.stats{
-    margin-top:30px;
-    background:var(--card);
-    backdrop-filter:var(--glass);
-    border-radius:20px;
-    padding:20px;
-}
-
-.leaderboard h2,
-.stats h2{
-    margin-bottom:15px;
-}
-
-#leaderboardList{
-    list-style:none;
-}
-
-#leaderboardList li{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:12px;
-    margin-bottom:10px;
-    background:rgba(255,255,255,.05);
-    border-radius:12px;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:12px;
-}
-
-.grid div{
-    background:rgba(255,255,255,.05);
-    padding:15px;
-    border-radius:12px;
-    text-align:center;
-}
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.75);
-    display:none;
-    justify-content:center;
-    align-items:center;
-    z-index:999;
-}
-
-.modalBox{
-    width:min(92%,400px);
-    background:#1e293b;
-    padding:25px;
-    border-radius:20px;
-}
-
-.modalBox h2{
-    margin-bottom:20px;
-}
-
-.modalBox input{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:12px;
-    margin-bottom:15px;
-}
-
-.modalBox button{
-    width:100%;
-    margin-top:10px;
-    padding:14px;
-    border-radius:12px;
-    background:#2563eb;
-    color:white;
-}
-
-footer{
-    margin:35px 0;
-    text-align:center;
-    opacity:.7;
-}
-
-/* Responsive */
-
-@media(max-width:768px){
-
-.status{
-grid-template-columns:1fr;
-}
-
-.grid{
-grid-template-columns:1fr;
-}
-
-header h1{
-font-size:24px;
-}
-
-#question{
-font-size:22px;
-}
-
-}
-```
-```css
-/* ===========================
-   ANIMATIONS
-=========================== */
-
-@keyframes fadeIn{
-from{
-opacity:0;
-transform:translateY(20px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
-@keyframes shake{
-
-0%{transform:translateX(0);}
-20%{transform:translateX(-8px);}
-40%{transform:translateX(8px);}
-60%{transform:translateX(-8px);}
-80%{transform:translateX(8px);}
-100%{transform:translateX(0);}
+overflow-x:hidden;
 
 }
 
-@keyframes pulse{
+/* ================= */
 
-0%{
-transform:scale(1);
-}
+.hidden{
 
-50%{
-transform:scale(1.05);
-}
-
-100%{
-transform:scale(1);
-}
+display:none;
 
 }
 
-@keyframes glow{
+/* ================= */
 
-0%{
-box-shadow:0 0 10px #00f;
-}
-
-50%{
-box-shadow:0 0 30px cyan;
-}
-
-100%{
-box-shadow:0 0 10px #00f;
-}
-
-}
-
-@keyframes rotate{
-
-from{
-transform:rotate(0deg);
-}
-
-to{
-transform:rotate(360deg);
-}
-
-}
-
-.fade{
-animation:fadeIn .5s ease;
-}
-
-.shake{
-animation:shake .4s;
-}
-
-.comboGlow{
-animation:glow 1s infinite;
-}
-
-.pulse{
-animation:pulse 1s infinite;
-}
-
-/* ===========================
-   SPLASH
-=========================== */
-
-#splash{
+#loading{
 
 position:fixed;
-inset:0;
-background:#0f172a;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
 display:flex;
+
 flex-direction:column;
+
 justify-content:center;
+
 align-items:center;
-z-index:99999;
+
+background:#10131d;
+
+z-index:9999;
 
 }
 
-#splash .logo{
-
-font-size:80px;
-
-animation:rotate 3s linear infinite;
-
-}
-
-#splash h1{
-
-margin-top:20px;
+#loading h1{
 
 font-size:40px;
 
-}
-
-#splash p{
-
-margin-top:10px;
-
-opacity:.7;
+color:#00d9ff;
 
 }
 
-/* ===========================
-   THEMES
-=========================== */
+#loading p{
 
-body.dark{
+margin-top:15px;
 
-background:linear-gradient(135deg,#0f172a,#111827);
+font-size:20px;
+
+}
+
+/* ================= */
+
+#menu,
+#game,
+#result,
+#stats,
+#achievement,
+#settings{
+
+width:95%;
+max-width:650px;
+
+background:#1b2031;
+
+padding:25px;
+
+border-radius:20px;
+
+box-shadow:0 0 25px rgba(0,0,0,.45);
+
+animation:fade .5s;
+
+}
+
+/* ================= */
+
+@keyframes fade{
+
+from{
+
+opacity:0;
+
+transform:translateY(20px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+/* ================= */
+
+h1,h2{
+
+text-align:center;
+
+margin-bottom:20px;
+
+}
+
+.playerBox{
+
+background:#2a3045;
+
+padding:15px;
+
+border-radius:12px;
+
+text-align:center;
+
+font-size:18px;
+
+margin-bottom:25px;
+
+}
+
+/* ================= */
+
+button{
+
+width:100%;
+
+padding:15px;
+
+margin-top:12px;
+
+border:none;
+
+border-radius:12px;
+
+font-size:17px;
+
+cursor:pointer;
+
+transition:.25s;
+
+font-weight:bold;
+
+}
+
+button:hover{
+
+transform:scale(1.03);
+
+}
+
+button:active{
+
+transform:scale(.95);
+
+}
+
+/* ================= */
+
+#playBtn{
+
+background:#00d084;
+
+color:#fff;
+
+}
+
+#statsBtn{
+
+background:#0099ff;
 
 color:white;
 
 }
 
+#achievementBtn{
+
+background:#ff9800;
+
+color:white;
+
+}
+
+#settingBtn{
+
+background:#8e44ad;
+
+color:white;
+
+}
+
+/* ================= */
+
+#hud{
+
+display:grid;
+
+grid-template-columns:repeat(4,1fr);
+
+gap:10px;
+
+margin-bottom:20px;
+
+}
+
+.box{
+
+background:#2d3550;
+
+padding:15px;
+
+border-radius:15px;
+
+text-align:center;
+
+font-size:20px;
+
+font-weight:bold;
+
+}
+
+/* ================= */
+
+#progress{
+
+height:18px;
+
+background:#2d3550;
+
+border-radius:20px;
+
+overflow:hidden;
+
+margin-bottom:25px;
+
+}
+
+#progressBar{
+
+height:100%;
+
+width:100%;
+
+background:linear-gradient(
+90deg,
+#00ff88,
+#00d9ff
+);
+
+transition:.2s;
+
+}
+
+/* ================= */
+
+#questionBox{
+
+background:#2d3550;
+
+padding:25px;
+
+border-radius:20px;
+
+}
+
+#question{
+
+margin-bottom:25px;
+
+font-size:28px;
+
+}
+
+/* ================= */
+
+.answer{
+
+background:#39415e;
+
+color:white;
+
+margin-bottom:15px;
+
+}
+
+.answer:hover{
+
+background:#00bcd4;
+
+}
+
+/* ================= */
+
+#result h2{
+
+margin:15px 0;
+
+}
+
+/* ================= */
+
+#stats p{
+
+margin:12px 0;
+
+font-size:18px;
+
+}
+
+#achievementList{
+
+background:#2d3550;
+
+padding:15px;
+
+border-radius:12px;
+
+min-height:180px;
+
+}
+
+/* ================= */
+
+select{
+
+width:100%;
+
+padding:15px;
+
+border:none;
+
+border-radius:10px;
+
+margin-bottom:20px;
+
+font-size:17px;
+
+}
+
+/* ================= */
+
+#confetti{
+
+position:fixed;
+
+left:0;
+
+top:0;
+
+width:100%;
+
+height:100%;
+
+pointer-events:none;
+
+}
+
+/* ================= */
+/* Tema Light */
+
 body.light{
 
-background:#f3f4f6;
+background:#eeeeee;
 
 color:#111;
 
 }
 
-body.light .card,
+body.light #menu,
 body.light #game,
-body.light .leaderboard,
-body.light .stats{
+body.light #result,
+body.light #stats,
+body.light #achievement,
+body.light #settings{
 
 background:white;
 
@@ -460,118 +408,76 @@ color:#111;
 
 }
 
-body.purple{
+body.light .box,
+body.light #questionBox,
+body.light .playerBox{
 
-background:linear-gradient(135deg,#4c1d95,#6d28d9,#8b5cf6);
+background:#f2f2f2;
 
 }
+
+/* ================= */
+/* Tema Neon */
+
+body.neon{
+
+background:#000;
+
+color:#0ff;
+
+}
+
+body.neon .box,
+body.neon #questionBox,
+body.neon .playerBox{
+
+border:2px solid cyan;
+
+box-shadow:0 0 15px cyan;
+
+}
+
+/* ================= */
+/* Tema Ocean */
 
 body.ocean{
 
-background:linear-gradient(135deg,#0ea5e9,#0284c7,#0369a1);
+background:#0d3b66;
 
 }
 
-/* ===========================
-   BUTTON EFFECT
-=========================== */
+body.ocean .box{
+
+background:#145da0;
+
+}
+
+body.ocean #questionBox{
+
+background:#1d70b8;
+
+}
+
+/* ================= */
+
+@media(max-width:700px){
+
+#hud{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+#question{
+
+font-size:22px;
+
+}
 
 button{
 
-position:relative;
-overflow:hidden;
+font-size:16px;
 
 }
 
-button::after{
-
-content:"";
-
-position:absolute;
-
-width:0;
-height:0;
-
-background:rgba(255,255,255,.4);
-
-border-radius:50%;
-
-left:50%;
-top:50%;
-
-transform:translate(-50%,-50%);
-
-transition:.5s;
-
 }
-
-button:active::after{
-
-width:350px;
-height:350px;
-
-opacity:0;
-
-}
-
-/* ===========================
-   ANSWER EFFECT
-=========================== */
-
-.correct{
-
-background:#22c55e !important;
-
-}
-
-.wrong{
-
-background:#ef4444 !important;
-
-}
-
-/* ===========================
-   COMBO
-=========================== */
-
-#combo{
-
-color:#facc15;
-
-font-weight:bold;
-
-text-shadow:0 0 15px gold;
-
-}
-
-/* ===========================
-   TIMER
-=========================== */
-
-#timerFill{
-
-transition:width 1s linear;
-
-}
-
-/* ===========================
-   CONFETTI
-=========================== */
-
-#confetti{
-
-position:fixed;
-
-left:0;
-top:0;
-
-width:100%;
-height:100%;
-
-pointer-events:none;
-
-z-index:999;
-
-}
-```
-

@@ -1,239 +1,319 @@
-```javascript
-/* ===========================
-   Brain Challenge V4
-   script.js - Part 1
-=========================== */
+/* ==========================================
+   Brain Challenge Ultimate
+   Script.js - Bagian 1
+========================================== */
 
-// ---------- ELEMENT ----------
-const startBtn = document.getElementById("startGame");
-const questionEl = document.getElementById("question");
-const answersEl = document.getElementById("answers");
+// ==========================
+// ELEMENT
+// ==========================
 
-const lifeEl = document.getElementById("life");
-const comboEl = document.getElementById("combo");
-const scoreEl = document.getElementById("score");
+const loading = document.getElementById("loading");
+const menu = document.getElementById("menu");
+const game = document.getElementById("game");
+const result = document.getElementById("result");
 
-const timerFill = document.getElementById("timerFill");
-const timerText = document.getElementById("timerText");
+const playBtn = document.getElementById("playBtn");
+const playAgain = document.getElementById("playAgain");
 
-const currentQuestion = document.getElementById("questionNow");
-const playerInfo = document.getElementById("playerInfo");
+const playerID = document.getElementById("playerID");
 
-// ---------- AUDIO ----------
-const bgm = document.getElementById("bgm");
-const correctSound = document.getElementById("correct");
-const wrongSound = document.getElementById("wrong");
-const gameOverSound = document.getElementById("gameover");
+const lifeText = document.getElementById("life");
+const timerText = document.getElementById("timer");
+const comboText = document.getElementById("combo");
+const scoreText = document.getElementById("score");
 
-// ---------- PLAYER ----------
-let player = JSON.parse(localStorage.getItem("brainPlayer"));
+const progressBar = document.getElementById("progressBar");
 
-function createPlayerID(){
+const question = document.getElementById("question");
+const answers = document.querySelectorAll(".answer");
 
-const chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+// ==========================
+// DATA GAME
+// ==========================
 
-let id="BC-";
+let lives = 4;
+let timer = 25;
+let score = 0;
+let combo = 0;
+let bestCombo = 0;
 
-for(let i=0;i<6;i++){
+let currentQuestion = null;
 
-id+=chars[Math.floor(Math.random()*chars.length)];
+let timerInterval = null;
 
-}
+// ==========================
+// PLAYER ID
+// ==========================
+
+function generatePlayerID(){
+
+let id =
+"BC-" +
+Math.floor(
+100000 + Math.random()*900000
+);
+
+localStorage.setItem(
+"brainPlayer",
+id
+);
 
 return id;
 
 }
 
-if(!player){
+let savedPlayer =
+localStorage.getItem("brainPlayer");
 
-const nama=prompt("Masukkan nama pemain");
+if(savedPlayer==null){
 
-player={
-
-name:nama||"Player",
-
-id:createPlayerID()
-
-};
-
-localStorage.setItem("brainPlayer",JSON.stringify(player));
+savedPlayer=
+generatePlayerID();
 
 }
 
-playerInfo.innerHTML=
-`👤 ${player.name}<br>🆔 ${player.id}`;
+playerID.innerHTML=savedPlayer;
 
-// ---------- GAME ----------
-let life=4;
-let combo=0;
-let score=0;
+// ==========================
+// LOADING
+// ==========================
 
-let timer=25;
+setTimeout(()=>{
 
-let timerInterval;
+loading.classList.add("hidden");
 
-let current=0;
+menu.classList.remove("hidden");
 
-// ---------- SOAL ----------
-const questions=[
+},1500);
 
-{
-q:"2 + 2 = ?",
-a:["3","4","5","6"],
-c:1
-},
+// ==========================
+// UPDATE HUD
+// ==========================
 
-{
-q:"Ibukota Indonesia?",
-a:["Bandung","Jakarta","Surabaya","Medan"],
-c:1
-},
+function updateHUD(){
 
-{
-q:"Planet Merah?",
-a:["Mars","Venus","Saturnus","Jupiter"],
-c:0
-},
+lifeText.innerHTML=lives;
 
-{
-q:"10 x 5 = ?",
-a:["20","30","40","50"],
-c:3
-},
+timerText.innerHTML=timer;
 
-{
-q:"Huruf pertama alfabet?",
-a:["A","B","C","D"],
-c:0
-},
+comboText.innerHTML=combo;
 
-{
-q:"100 : 10 = ?",
-a:["20","10","5","15"],
-c:1
-},
+scoreText.innerHTML=score;
 
-{
-q:"5² = ?",
-a:["10","20","25","30"],
-c:2
-},
-
-{
-q:"Laut terbesar?",
-a:["Atlantik","Pasifik","Hindia","Arktik"],
-c:1
-},
-
-{
-q:"7 x 8 = ?",
-a:["54","56","58","60"],
-c:1
-},
-
-{
-q:"HTML singkatan dari?",
-a:[
-"HyperText Markup Language",
-"Home Tool Markup",
-"Hyper Link",
-"None"
-],
-c:0
-},
-
-{
-q:"CSS digunakan untuk?",
-a:[
-"Database",
-"Style Website",
-"Server",
-"Game"
-],
-c:1
-},
-
-{
-q:"JavaScript berjalan di?",
-a:[
-"Browser",
-"Kulkas",
-"TV",
-"Kamera"
-],
-c:0
-}
-
-];
-
-// ---------- RANDOM ----------
-function shuffle(arr){
-
-return arr.sort(()=>Math.random()-0.5);
+progressBar.style.width=(timer/25)*100+"%";
 
 }
 
-let gameQuestions=[];
+// ==========================
+// TIMER
+// ==========================
 
-// ---------- START ----------
-startBtn.onclick=()=>{
-
-bgm.play();
-
-life=4;
-combo=0;
-score=0;
-
-current=0;
-
-gameQuestions=
-shuffle([...questions]).slice(0,10);
-
-updateUI();
-
-showQuestion();
-
-};
-
-// ---------- UI ----------
-function updateUI(){
-
-lifeEl.textContent=life;
-
-comboEl.textContent=combo;
-
-scoreEl.textContent=score;
-
-currentQuestion.textContent=current+1;
-
-}
-
-// ---------- SOAL ----------
-function showQuestion(){
+function startTimer(){
 
 clearInterval(timerInterval);
 
 timer=25;
 
-timerText.textContent=timer;
+updateHUD();
 
-timerFill.style.width="100%";
+timerInterval=setInterval(()=>{
 
-const q=gameQuestions[current];
+timer--;
 
-questionEl.textContent=q.q;
+updateHUD();
 
-answersEl.innerHTML="";
+if(timer<=0){
 
-q.a.forEach((jawaban,index)=>{
+loseLife();
 
-const btn=document.createElement("button");
+}
 
-btn.textContent=jawaban;
+},1000);
 
-btn.onclick=()=>answer(index);
+}
 
-answersEl.appendChild(btn);
+// ==========================
+// NYAWA
+// ==========================
+
+function loseLife(){
+
+clearInterval(timerInterval);
+
+lives--;
+
+combo=0;
+
+updateHUD();
+
+if(lives<=0){
+
+gameOver();
+
+return;
+
+}
+
+setTimeout(()=>{
+
+nextQuestion();
+
+},800);
+
+}
+
+// ==========================
+// SCORE
+// ==========================
+
+function addScore(){
+
+let bonus=timer*5;
+
+score+=100+bonus+(combo*20);
+
+combo++;
+
+if(combo>bestCombo){
+
+bestCombo=combo;
+
+}
+
+updateHUD();
+
+}
+
+// ==========================
+// RESET GAME
+// ==========================
+
+function resetGame(){
+
+lives=4;
+
+timer=25;
+
+score=0;
+
+combo=0;
+
+bestCombo=0;
+
+updateHUD();
+
+}
+
+// ==========================
+// START GAME
+// ==========================
+
+playBtn.onclick=()=>{
+
+menu.classList.add("hidden");
+
+game.classList.remove("hidden");
+
+resetGame();
+
+nextQuestion();
+
+}
+
+playAgain.onclick=()=>{
+
+result.classList.add("hidden");
+
+game.classList.remove("hidden");
+
+resetGame();
+
+nextQuestion();
+
+}
+
+// ==========================
+// GAME OVER
+// ==========================
+
+function gameOver(){
+
+clearInterval(timerInterval);
+
+game.classList.add("hidden");
+
+result.classList.remove("hidden");
+
+document.getElementById("finalScore").innerHTML=score;
+
+document.getElementById("bestCombo").innerHTML=bestCombo;
+
+document.getElementById("rank").innerHTML=getRank(score);
+
+saveHighScore();
+
+}
+
+// ==========================
+// RANK
+// ==========================
+
+function getRank(score){
+
+if(score<1000)return"Bronze";
+
+if(score<3000)return"Silver";
+
+if(score<6000)return"Gold";
+
+if(score<9000)return"Platinum";
+
+if(score<12000)return"Diamond";
+
+return"Legend";
+
+}
+
+// ==========================
+// HIGHSCORE
+// ==========================
+
+function saveHighScore(){
+
+let hs=
+localStorage.getItem("highScore");
+
+if(hs==null){
+
+hs=0;
+
+}
+
+if(score>Number(hs)){
+
+localStorage.setItem(
+"highScore",
+score
+);
+
+}
+
+}
+
+// ==========================
+// PLACEHOLDER
+// ==========================
+
+function nextQuestion(){
+
+// Akan dibuat pada Bagian 2
+question.innerHTML="Loading soal...";
+
+answers.forEach(btn=>{
+
+btn.innerHTML="...";
+
+btn.onclick=null;
 
 });
 
@@ -241,658 +321,726 @@ startTimer();
 
 }
 
-// ---------- TIMER ----------
-function startTimer(){
+// ==========================
 
-timerInterval=setInterval(()=>{
+updateHUD();
 
-timer--;
+/* ==========================================
+   SCRIPT.JS - BAGIAN 2
+   Sistem Soal & Jawaban
+========================================== */
 
-timerText.textContent=timer;
+// ==========================
+// DATA SOAL
+// ==========================
 
-timerFill.style.width=(timer/25*100)+"%";
+const colorQuestions = [
+  { q: "Apa warna langit saat siang?", a: "Biru", o: ["Merah","Hijau","Biru","Hitam"] },
+  { q: "Apa warna daun?", a: "Hijau", o: ["Biru","Hijau","Ungu","Abu"] },
+  { q: "Apa warna pisang matang?", a: "Kuning", o: ["Merah","Kuning","Hitam","Putih"] },
+  { q: "Apa warna darah?", a: "Merah", o: ["Biru","Merah","Hijau","Pink"] }
+];
 
-if(timer<=0){
+// ==========================
+// MATEMATIKA
+// ==========================
 
-clearInterval(timerInterval);
+function mathQuestion(){
 
-life--;
+    let a=Math.floor(Math.random()*20)+1;
+    let b=Math.floor(Math.random()*20)+1;
 
-combo=0;
+    let ops=["+","-","×"];
 
-nextQuestion();
+    let op=ops[Math.floor(Math.random()*ops.length)];
 
-}
+    let answer;
 
-},1000);
+    if(op==="+") answer=a+b;
+    if(op==="-") answer=a-b;
+    if(op==="×") answer=a*b;
 
-}
-```
+    let options=[answer];
 
-/* ===========================
-   SCRIPT.JS PART 2
-=========================== */
+    while(options.length<4){
 
-// ---------- JAWABAN ----------
-function answer(index){
+        let fake=answer+Math.floor(Math.random()*15)-7;
 
-    clearInterval(timerInterval);
-
-    const benar = gameQuestions[current].c;
-    const buttons = answersEl.querySelectorAll("button");
-
-    buttons.forEach((btn,i)=>{
-
-        btn.disabled = true;
-
-        if(i===benar){
-            btn.classList.add("correct");
-        }
-
-        if(i===index && i!==benar){
-            btn.classList.add("wrong");
-        }
-
-    });
-
-    if(index===benar){
-
-        correctSound.currentTime=0;
-        correctSound.play();
-
-        combo++;
-
-        // Bonus score
-        score += 10 + (combo*2);
-
-        // Bonus waktu tiap combo 5
-        if(combo>0 && combo%5===0){
-            timer += 5;
-            if(timer>25) timer=25;
-        }
-
-        comboEl.classList.add("comboGlow");
-
-    }else{
-
-        wrongSound.currentTime=0;
-        wrongSound.play();
-
-        combo=0;
-
-        life--;
-
-        document.body.classList.add("shake");
-
-        setTimeout(()=>{
-            document.body.classList.remove("shake");
-        },400);
+        if(fake!==answer && !options.includes(fake))
+            options.push(fake);
 
     }
 
-    updateUI();
+    options.sort(()=>Math.random()-0.5);
 
-    setTimeout(nextQuestion,1000);
+    return{
+
+        question:`${a} ${op} ${b} = ?`,
+
+        answer,
+
+        options
+
+    };
 
 }
 
-// ---------- NEXT ----------
+// ==========================
+// SOAL WARNA
+// ==========================
+
+function randomColorQuestion(){
+
+    return colorQuestions[
+        Math.floor(Math.random()*colorQuestions.length)
+    ];
+
+}
+
+// ==========================
+// PILIH SOAL
+// ==========================
+
+function generateQuestion(){
+
+    let random=Math.random();
+
+    if(random<0.7){
+
+        return mathQuestion();
+
+    }else{
+
+        return randomColorQuestion();
+
+    }
+
+}
+
+// ==========================
+// SOAL BERIKUTNYA
+// ==========================
+
 function nextQuestion(){
 
-    if(life<=0){
-
-        finishGame();
-
-        return;
-
-    }
-
-    current++;
-
-    if(current>=gameQuestions.length){
-
-        finishGame();
-
-        return;
-
-    }
-
-    updateUI();
-
-    showQuestion();
-
-}
-
-// ---------- GAME OVER ----------
-function finishGame(){
-
     clearInterval(timerInterval);
 
-    bgm.pause();
+    currentQuestion=generateQuestion();
 
-    gameOverSound.currentTime=0;
-    gameOverSound.play();
+    question.innerHTML=currentQuestion.question || currentQuestion.q;
 
-    document.getElementById("game").style.display="none";
-    document.getElementById("gameOver").style.display="block";
+    let options=currentQuestion.options || currentQuestion.o;
 
-    document.getElementById("finalScore").textContent =
-    "Score : "+score;
+    answers.forEach((btn,index)=>{
 
-    let rank="🥉 Beginner";
+        btn.innerHTML=options[index];
 
-    if(score>=60) rank="🏅 Advanced";
-    if(score>=120) rank="🥈 Pro";
-    if(score>=180) rank="🥇 Master";
-    if(score>=250) rank="👑 Legend";
+        btn.onclick=()=>{
 
-    document.getElementById("rank").textContent=rank;
-
-    saveResult(rank);
-
-}
-
-// ---------- SAVE RESULT ----------
-function saveResult(rank){
-
-    const board =
-    JSON.parse(localStorage.getItem("brainLeaderboard")) || [];
-
-    board.push({
-
-        name:player.name,
-
-        id:player.id,
-
-        score:score,
-
-        rank:rank
-
-    });
-
-    board.sort((a,b)=>b.score-a.score);
-
-    if(board.length>10){
-        board.length=10;
-    }
-
-    localStorage.setItem(
-        "brainLeaderboard",
-        JSON.stringify(board)
-    );
-
-    loadLeaderboard();
-
-}
-
-// ---------- LOAD BOARD ----------
-function loadLeaderboard(){
-
-    const board =
-    JSON.parse(localStorage.getItem("brainLeaderboard")) || [];
-
-    const list =
-    document.getElementById("leaderboardList");
-
-    list.innerHTML="";
-
-    board.forEach((p,i)=>{
-
-        const li=document.createElement("li");
-
-        let medal="";
-
-        if(i===0) medal="🥇";
-        else if(i===1) medal="🥈";
-        else if(i===2) medal="🥉";
-        else medal="🏅";
-
-        li.innerHTML=`
-        <span>
-        ${medal}
-        ${p.name}<br>
-        <small>${p.id}</small>
-        </span>
-
-        <span>
-        ${p.score}
-        </span>
-        `;
-
-        list.appendChild(li);
-
-    });
-
-}
-
-loadLeaderboard();
-
-/* ===========================
-   SCRIPT.JS PART 3
-=========================== */
-
-// ---------- MAIN LAGI ----------
-document.getElementById("playAgain").onclick=()=>{
-
-document.getElementById("gameOver").style.display="none";
-document.getElementById("game").style.display="block";
-
-life=4;
-combo=0;
-score=0;
-current=0;
-
-gameQuestions=shuffle([...questions]).slice(0,10);
-
-updateUI();
-
-showQuestion();
-
-bgm.currentTime=0;
-bgm.play();
-
-};
-
-// ---------- SHARE WA ----------
-document.getElementById("shareWA").onclick=()=>{
-
-const text=
-`🧠 Brain Challenge V4
-
-👤 ${player.name}
-🆔 ${player.id}
-
-🏆 Score : ${score}
-⭐ Combo : ${combo}
-
-Berani mengalahkanku?`;
-
-window.open(
-"https://wa.me/?text="+encodeURIComponent(text),
-"_blank"
-);
-
-};
-
-// ---------- SHARE INSTAGRAM ----------
-document.getElementById("shareIG").onclick=()=>{
-
-const caption=
-`🧠 Brain Challenge
-
-👤 ${player.name}
-🆔 ${player.id}
-
-🏆 Score : ${score}
-
-#BrainChallenge
-#HTMLGame
-#JavaScript`;
-
-navigator.clipboard.writeText(caption);
-
-alert("Caption berhasil disalin.");
-
-};
-
-// ---------- SETTINGS ----------
-const settings=document.getElementById("settings");
-
-document.getElementById("openSetting").onclick=()=>{
-
-settings.style.display="flex";
-
-};
-
-document.getElementById("closeSetting").onclick=()=>{
-
-settings.style.display="none";
-
-};
-
-// ---------- TEMA ----------
-document.getElementById("themeDark").onclick=()=>{
-
-document.body.className="dark";
-
-localStorage.setItem("theme","dark");
-
-};
-
-document.getElementById("themeLight").onclick=()=>{
-
-document.body.className="light";
-
-localStorage.setItem("theme","light");
-
-};
-
-document.getElementById("themePurple").onclick=()=>{
-
-document.body.className="purple";
-
-localStorage.setItem("theme","purple");
-
-};
-
-document.getElementById("themeOcean").onclick=()=>{
-
-document.body.className="ocean";
-
-localStorage.setItem("theme","ocean");
-
-};
-
-const savedTheme=
-localStorage.getItem("theme");
-
-if(savedTheme){
-
-document.body.className=savedTheme;
-
-}
-
-// ---------- MUSIC ----------
-let music=true;
-
-document.getElementById("musicBtn").onclick=()=>{
-
-music=!music;
-
-bgm.muted=!music;
-
-correctSound.muted=!music;
-wrongSound.muted=!music;
-gameOverSound.muted=!music;
-
-};
-
-// ---------- RESET LEADERBOARD ----------
-document.getElementById("resetBoard").onclick=()=>{
-
-if(confirm("Reset leaderboard?")){
-
-localStorage.removeItem("brainLeaderboard");
-
-loadLeaderboard();
-
-}
-
-};
-
-// ---------- RESET PROFILE ----------
-document.getElementById("resetStats").onclick=()=>{
-
-if(confirm("Reset profil pemain?")){
-
-localStorage.removeItem("brainPlayer");
-
-location.reload();
-
-}
-
-};
-
-// ---------- SPLASH ----------
-window.onload=()=>{
-
-setTimeout(()=>{
-
-document.getElementById("splash").style.display="none";
-
-},1800);
-
-};
-
-// ---------- CONFETTI ----------
-function showConfetti(){
-
-const canvas=document.getElementById("confetti");
-
-const ctx=canvas.getContext("2d");
-
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-
-let pieces=[];
-
-for(let i=0;i<120;i++){
-
-pieces.push({
-
-x:Math.random()*canvas.width,
-
-y:-20,
-
-r:Math.random()*8+4,
-
-dx:(Math.random()-0.5)*4,
-
-dy:Math.random()*5+2
-
-});
-
-}
-
-function draw(){
-
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-pieces.forEach(p=>{
-
-ctx.beginPath();
-
-ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-
-ctx.fillStyle=`hsl(${Math.random()*360},100%,50%)`;
-
-ctx.fill();
-
-p.x+=p.dx;
-
-p.y+=p.dy;
-
-});
-
-requestAnimationFrame(draw);
-
-}
-
-draw();
-
-setTimeout(()=>{
-
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-},4000);
-
-    }/* ===========================
-   SCRIPT.JS PART 4
-   Achievement + Statistik
-=========================== */
-
-let stats = JSON.parse(localStorage.getItem("brainStats")) || {
-    totalPlay: 0,
-    totalCorrect: 0,
-    totalWrong: 0,
-    bestCombo: 0,
-    highScore: 0
-};
-
-// ---------- UPDATE STATS ----------
-function updateStats(isCorrect){
-
-    if(isCorrect){
-        stats.totalCorrect++;
-    }else{
-        stats.totalWrong++;
-    }
-
-    if(combo > stats.bestCombo){
-        stats.bestCombo = combo;
-    }
-
-    if(score > stats.highScore){
-        stats.highScore = score;
-    }
-
-    localStorage.setItem(
-        "brainStats",
-        JSON.stringify(stats)
-    );
-
-    renderStats();
-
-}
-
-function renderStats(){
-
-    document.getElementById("totalPlay").textContent =
-    stats.totalPlay;
-
-    document.getElementById("correctCount").textContent =
-    stats.totalCorrect;
-
-    document.getElementById("wrongCount").textContent =
-    stats.totalWrong;
-
-    document.getElementById("bestCombo").textContent =
-    stats.bestCombo;
-
-    document.getElementById("highScore").textContent =
-    stats.highScore;
-
-    const total =
-    stats.totalCorrect + stats.totalWrong;
-
-    let acc = 0;
-
-    if(total > 0){
-        acc = Math.round(
-            stats.totalCorrect / total * 100
-        );
-    }
-
-    document.getElementById("accuracy").textContent =
-    acc + "%";
-
-}
-
-renderStats();
-
-// ---------- ACHIEVEMENT ----------
-function checkAchievement(){
-
-    const list = [];
-
-    if(score >= 100){
-        list.push("🏅 Score Hunter");
-    }
-
-    if(score >= 200){
-        list.push("🥇 Master Mind");
-    }
-
-    if(combo >= 5){
-        list.push("🔥 Combo King");
-    }
-
-    if(combo >= 10){
-        list.push("⚡ Speed Genius");
-    }
-
-    if(life === 4){
-        list.push("❤️ Perfect Run");
-    }
-
-    if(list.length){
-
-        alert(
-            "Achievement Baru!\n\n" +
-            list.join("\n")
-        );
-
-    }
-
-}
-
-// ---------- RESET STATS ----------
-function resetStatistics(){
-
-    if(confirm("Reset semua statistik?")){
-
-        stats = {
-
-            totalPlay:0,
-            totalCorrect:0,
-            totalWrong:0,
-            bestCombo:0,
-            highScore:0
+            checkAnswer(options[index]);
 
         };
 
-        localStorage.removeItem("brainStats");
+    });
 
-        renderStats();
+    startTimer();
+
+}
+
+// ==========================
+// CEK JAWABAN
+// ==========================
+
+function checkAnswer(answer){
+
+    clearInterval(timerInterval);
+
+    let correct=currentQuestion.answer || currentQuestion.a;
+
+    if(String(answer)===String(correct)){
+
+        addScore();
+
+        buttonFlash("green");
+
+        setTimeout(nextQuestion,500);
+
+    }else{
+
+        combo=0;
+
+        loseLife();
+
+        buttonFlash("red");
 
     }
 
 }
 
-// ---------- BONUS SCORE ----------
-function addBonus(){
+// ==========================
+// EFEK TOMBOL
+// ==========================
 
-    if(combo === 3){
+function buttonFlash(color){
 
-        score += 15;
+    answers.forEach(btn=>{
 
+        btn.style.background=color;
+
+    });
+
+    setTimeout(()=>{
+
+        answers.forEach(btn=>{
+
+            btn.style.background="";
+
+        });
+
+    },250);
+
+}
+
+/* ==========================================
+   SCRIPT.JS - BAGIAN 3
+   Level, Statistik, Achievement
+========================================== */
+
+// ===== LEVEL =====
+let level = 1;
+let correctCount = 0;
+
+const levelText = document.createElement("div");
+levelText.className = "box";
+levelText.innerHTML = `🎯 <span id="level">${level}</span>`;
+
+const hud = document.getElementById("hud");
+if (hud.children.length === 4) {
+    hud.appendChild(levelText);
+}
+
+function updateLevel() {
+    document.getElementById("level").textContent = level;
+}
+
+function levelUp() {
+    if (correctCount > 0 && correctCount % 10 === 0) {
+        level++;
+        updateLevel();
+        showToast(`🎉 Level ${level}!`);
     }
+}
 
-    if(combo === 5){
+// ===== COMBO MULTIPLIER =====
+function getComboMultiplier() {
+    if (combo >= 20) return 4;
+    if (combo >= 15) return 3;
+    if (combo >= 10) return 2;
+    if (combo >= 5) return 1.5;
+    return 1;
+}
 
-        score += 30;
+// Ganti isi addScore() lama dengan versi ini
+function addScore() {
 
-    }
+    const bonusTime = timer * 10;
+    const multi = getComboMultiplier();
 
-    if(combo === 10){
+    score += Math.floor((100 + bonusTime) * multi);
 
-        score += 60;
+    combo++;
+    correctCount++;
+
+    if (combo > bestCombo) bestCombo = combo;
+
+    levelUp();
+
+    updateHUD();
+}
+
+// ===== SOAL LOGIKA =====
+
+const logicQuestions = [
+
+{
+q:"Mana yang lebih besar?",
+o:["15","9","12","7"],
+a:"15"
+},
+
+{
+q:"2,4,6,8,...?",
+o:["10","12","9","11"],
+a:"10"
+},
+
+{
+q:"5+5×2 = ?",
+o:["20","15","10","25"],
+a:"15"
+},
+
+{
+q:"Huruf setelah D?",
+o:["E","F","G","H"],
+a:"E"
+}
+
+];
+
+// Tambahkan ke generateQuestion()
+
+// if(random<0.55) return mathQuestion();
+// if(random<0.80) return randomColorQuestion();
+// return logicQuestions[Math.floor(Math.random()*logicQuestions.length)];
+
+
+// ===== BONUS CEPAT =====
+
+function fastBonus(){
+
+if(timer>=20){
+
+score+=500;
+
+showToast("⚡ Bonus Cepat +500");
+
+}
+
+}
+
+// panggil fastBonus()
+// setelah jawaban benar
+
+
+// ===== SHAKE =====
+
+function screenShake(){
+
+document.body.classList.add("shake");
+
+setTimeout(()=>{
+
+document.body.classList.remove("shake");
+
+},400);
+
+}
+
+
+// panggil screenShake()
+// saat jawaban salah
+
+
+// ===== SOUND =====
+
+const soundCorrect=new Audio("audio/correct.mp3");
+
+const soundWrong=new Audio("audio/wrong.mp3");
+
+const soundWin=new Audio("audio/win.mp3");
+
+
+// saat benar
+
+// soundCorrect.play()
+
+// saat salah
+
+// soundWrong.play()
+
+// saat menang
+
+// soundWin.play()
+
+
+// ===== CONFETTI =====
+
+function confetti(){
+
+for(let i=0;i<80;i++){
+
+let d=document.createElement("div");
+
+d.className="confetti";
+
+d.style.left=Math.random()*100+"vw";
+
+d.style.background=
+`hsl(${Math.random()*360},100%,50%)`;
+
+d.style.animationDuration=
+2+Math.random()*3+"s";
+
+document.body.appendChild(d);
+
+setTimeout(()=>{
+
+d.remove();
+
+},5000);
+
+}
+
+}
+
+
+// ===== TOAST =====
+
+function showToast(text){
+
+let t=document.createElement("div");
+
+t.className="toast";
+
+t.innerHTML=text;
+
+document.body.appendChild(t);
+
+setTimeout(()=>{
+
+t.classList.add("show");
+
+},50);
+
+setTimeout(()=>{
+
+t.remove();
+
+},2200);
+
+}
+
+
+// ===== STATISTIK =====
+
+const stats={
+
+played:Number(localStorage.getItem("played"))||0,
+
+correct:Number(localStorage.getItem("correct"))||0,
+
+wrong:Number(localStorage.getItem("wrong"))||0,
+
+high:Number(localStorage.getItem("highScore"))||0
+
+};
+
+function saveStats(){
+
+localStorage.setItem("played",stats.played);
+
+localStorage.setItem("correct",stats.correct);
+
+localStorage.setItem("wrong",stats.wrong);
+
+localStorage.setItem("highScore",Math.max(stats.high,score));
+
+}
+
+
+// ===== ACHIEVEMENT =====
+
+const achievements=[];
+
+function unlock(name){
+
+if(!achievements.includes(name)){
+
+achievements.push(name);
+
+showToast("🏆 "+name);
+
+}
+
+}
+
+// Contoh
+
+if(score>=5000){
+
+unlock("Score Master");
+
+}
+
+if(bestCombo>=10){
+
+unlock("Combo King");
+
+}
+
+if(level>=5){
+
+unlock("Level Hunter");
+
+}
+
+/* ==========================================
+   SCRIPT.JS - BAGIAN 4
+   Leaderboard, Theme, Reward, Shop
+========================================== */
+
+// ==========================
+// COIN
+// ==========================
+
+let coins = Number(localStorage.getItem("coins")) || 0;
+
+function addCoins(amount){
+
+    coins += amount;
+
+    localStorage.setItem("coins", coins);
+
+    showToast("🪙 +" + amount + " Coin");
+
+}
+
+// setiap jawaban benar
+// addCoins(5);
+
+
+// ==========================
+// DAILY REWARD
+// ==========================
+
+function dailyReward(){
+
+    const today = new Date().toDateString();
+
+    const last = localStorage.getItem("dailyReward");
+
+    if(last !== today){
+
+        addCoins(100);
+
+        showToast("🎁 Daily Reward +100 Coin");
+
+        localStorage.setItem("dailyReward", today);
 
     }
 
 }
 
-// ---------- LEVEL ----------
-function getDifficulty(){
+dailyReward();
 
-    if(score >= 200){
-        return "🔥 HARD";
-    }
 
-    if(score >= 100){
-        return "⭐ MEDIUM";
-    }
+// ==========================
+// LOGIN STREAK
+// ==========================
 
-    return "😊 EASY";
+let streak = Number(localStorage.getItem("streak")) || 0;
+
+const lastLogin = localStorage.getItem("lastLogin");
+
+const today = new Date().toDateString();
+
+if(lastLogin !== today){
+
+    streak++;
+
+    localStorage.setItem("streak", streak);
+
+    localStorage.setItem("lastLogin", today);
 
 }
 
-// ---------- SAVE PLAY ----------
-function savePlay(){
+showToast("🔥 Streak " + streak + " Hari");
 
-    stats.totalPlay++;
+
+// ==========================
+// LEADERBOARD
+// ==========================
+
+let leaderboard = JSON.parse(
+localStorage.getItem("leaderboard")
+) || [];
+
+function saveLeaderboard(){
+
+    leaderboard.push({
+
+        id: savedPlayer,
+
+        score: score,
+
+        date: new Date().toLocaleDateString()
+
+    });
+
+    leaderboard.sort((a,b)=>b.score-a.score);
+
+    leaderboard = leaderboard.slice(0,10);
 
     localStorage.setItem(
-        "brainStats",
-        JSON.stringify(stats)
+        "leaderboard",
+        JSON.stringify(leaderboard)
     );
 
 }
 
-// ---------- PANGGIL DI FINISHGAME ----------
-// Tambahkan baris berikut di dalam finishGame()
-// sebelum saveResult(rank)
 
-savePlay();
-checkAchievement();
-renderStats();
+// panggil saat Game Over
+// saveLeaderboard();
+
+
+// ==========================
+// THEME
+// ==========================
+
+const theme = document.getElementById("theme");
+
+const savedTheme =
+localStorage.getItem("theme") || "dark";
+
+document.body.className = savedTheme;
+
+theme.value = savedTheme;
+
+theme.onchange = () => {
+
+    document.body.className = theme.value;
+
+    localStorage.setItem(
+        "theme",
+        theme.value
+    );
+
+};
+
+
+// ==========================
+// SHOP
+// ==========================
+
+const shop = [
+
+{ name:"Neon", cost:300 },
+
+{ name:"Ocean", cost:500 },
+
+{ name:"Galaxy", cost:1000 },
+
+{ name:"Gold", cost:2000 }
+
+];
+
+function buyTheme(index){
+
+    const item = shop[index];
+
+    if(coins >= item.cost){
+
+        coins -= item.cost;
+
+        localStorage.setItem("coins", coins);
+
+        showToast("✅ " + item.name + " Dibeli");
+
+    }else{
+
+        showToast("❌ Coin Tidak Cukup");
+
+    }
+
+}
+
+
+// ==========================
+// SHARE WHATSAPP
+// ==========================
+
+function shareWhatsApp(){
+
+const text =
+`🧠 Brain Challenge
+
+🏆 Score : ${score}
+
+⭐ Combo : ${bestCombo}
+
+🎯 Rank : ${getRank(score)}
+
+Main juga yuk!`;
+
+window.open(
+
+"https://wa.me/?text="+
+
+encodeURIComponent(text)
+
+);
+
+}
+
+
+// ==========================
+// SHARE INSTAGRAM
+// ==========================
+
+function shareInstagram(){
+
+alert(
+
+"Instagram tidak mendukung share langsung dari website.\n\nGunakan tombol Screenshot lalu upload ke Story."
+
+);
+
+}
+
+
+// ==========================
+// ACHIEVEMENT
+// ==========================
+
+const allAchievements=[
+
+"First Win",
+"Combo x5",
+"Combo x10",
+"Combo x20",
+"1000 Score",
+"3000 Score",
+"5000 Score",
+"10000 Score",
+"No Damage",
+"Speed Runner",
+"Level 5",
+"Level 10",
+"100 Correct",
+"500 Correct",
+"100 Game",
+"Daily Player",
+"7 Day Streak",
+"30 Day Streak",
+"Coin Collector",
+"Legend Player"
+
+];
+
+function checkAchievements(){
+
+if(score>=1000)unlock("1000 Score");
+
+if(score>=3000)unlock("3000 Score");
+
+if(score>=5000)unlock("5000 Score");
+
+if(combo>=5)unlock("Combo x5");
+
+if(combo>=10)unlock("Combo x10");
+
+if(combo>=20)unlock("Combo x20");
+
+if(level>=5)unlock("Level 5");
+
+if(level>=10)unlock("Level 10");
+
+if(lives===4)unlock("No Damage");
+
+if(streak>=7)unlock("7 Day Streak");
+
+if(streak>=30)unlock("30 Day Streak");
+
+}
+
